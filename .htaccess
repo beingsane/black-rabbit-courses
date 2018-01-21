@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# if path or file is not found, display 404 message
+ErrorDocument 404 /404.php
+
+# Append .php if that file exists (internal rewrite)
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule !.*\.php$ %{REQUEST_FILENAME}.php [QSA,L]

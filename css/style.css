@@ -1,0 +1,25 @@
+/***************************
+ ** DRY
+ ***************************/
+.spacer-top {
+  margin-top: 48px;
+}
+
+/***************************
+ ** navbar
+ ***************************/
+.navbar .navbar-brand {
+  position: relative;
+}
+
+.navbar .navbar-brand {
+  padding-left: 40px;
+}
+
+.navbar .navbar-brand svg {
+  height: 50px;
+  left: -10px;
+  position: absolute;
+  top: -6px;
+  width: 50px;
+}
