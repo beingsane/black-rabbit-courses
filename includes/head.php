@@ -1,4 +1,8 @@
 <?php
+  // magic happens
+  include_once('connect/helper.php');
+
+  // is title not set for page?
   if(!$title) {
     $title = 'Black Rabbit Courses';
   }

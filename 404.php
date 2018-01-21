@@ -1,7 +1,9 @@
 <?php
 $title = 'Page Not Found | 404';
-include('includes/head.php');
+
+include_once('includes/head.php');
 ?>
+
 <div class="container spacer-top">
   <div class="jumbotron">
     <h1 class="display-4">RUH ROH :: 404 Error</h1>
@@ -12,6 +14,7 @@ include('includes/head.php');
     </p>
   </div>
 </div>
+
 <?php
-include('includes/foot.php');
+include_once('includes/foot.php');
 ?>

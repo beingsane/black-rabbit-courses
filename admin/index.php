@@ -1,9 +1,18 @@
 <?php
+include_once('../connect/helper.php');
+
+// first is there
+if(!isThereAnAdminUser()){
+  // go to add new admin
+	header('Location: /admin/new-admin-user.php');
+}
+
 $title = 'Welcome to Black Rabbit Courses';
-include('../includes/head.php');
+
+include_once('../includes/head.php');
 
 $isAdmin = true;
-include('../includes/nav.php');
+include_once('../includes/nav.php');
 ?>
 <div class="container spacer-top">
   <div class="jumbotron">

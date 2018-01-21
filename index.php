@@ -1,9 +1,11 @@
 <?php
 $title = 'Welcome to Black Rabbit Courses';
-include('includes/head.php');
 
-include('includes/nav.php');
+include_once('includes/head.php');
+
+include_once('includes/nav.php');
 ?>
+
 <div class="container spacer-top">
   <div class="jumbotron">
     <h1 class="display-4">Welcome to Black Rabbit Courses!</h1>
@@ -14,6 +16,7 @@ include('includes/nav.php');
     </p>
   </div>
 </div>
+
 <?php
-include('includes/foot.php');
+include_once('includes/foot.php');
 ?>
