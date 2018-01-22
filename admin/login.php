@@ -3,18 +3,11 @@ include_once('../connect/helper.php');
 
 // if post
 if(isset($_POST) && !empty($_POST)) {
-  addAdminUser($_POST);
+  // addAdminUser($_POST);
   exit();
 }
 
-// first is there
-if(isThereAnAdminUser()){
-  // go to add new admin
-	header('Location: /admin/');
-  exit();
-}
-
-$title = 'Create Admin';
+$title = 'Admin Login';
 
 include_once('../includes/head.php');
 
@@ -25,25 +18,13 @@ include_once('../includes/nav.php');
 
 <div class="container spacer-top">
   <div class="jumbotron">
-    <h1>Add Admin User</h1>
+    <h1>Admin Login</h1>
     <form action="" method="post">
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" name="name" aria-describedby="name" placeholder="Name">
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
             <label for="username">Username</label>
             <input type="text" class="form-control" id="username" name="username" aria-describedby="username" placeholder="Username">
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="email">E-mail</label>
-            <input type="email" class="form-control" id="email" name="email" aria-describedby="email" placeholder="E-mail">
           </div>
         </div>
         <div class="col-md-6">
@@ -53,7 +34,7 @@ include_once('../includes/nav.php');
           </div>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary">Add User</button>
+      <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </div>
 </div>

@@ -79,7 +79,7 @@ function checkConnection($host, $table, $user, $pass, $responseType) {
  *	Login/Session Helpers
  */
 function pass_encrypt($text){
-	return trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $salt, $text, MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND))));
+	return password_hash($text, PASSWORD_DEFAULT, ['cost' => 12]);
 }
 
 function pass_decrypt($text){
@@ -157,6 +157,40 @@ function isThereAnAdminUser(){
 	$response = $db->custom_query('SELECT id FROM users', true);
 
 	return !empty($response) ? 1 : 0;
+}
+
+function addAdminUser($post){
+	// connect to datbase
+	$db = new Database(brc::DBHOST, brc::DBTABLE, brc::DBUSER, brc::DBPASS);
+
+	// insert new admin user
+	$admin_record = array (
+		'name' 						=> $post['name'],
+		'username'				=> $post['username'],
+		'email'						=> $post['email'],
+		'password'				=> pass_encrypt($post['password']),
+		'access_code'			=> '',
+		'is_admin' 				=> 1,
+		'created'					=> date('Y-m-d H:i:s'),
+		'updated'					=> '0000-00-00 00:00:00',
+		'last_login'			=> '0000-00-00 00:00:00',
+		'active'					=> 1,
+	);
+
+	$response = $db->insert('users', $admin_record);
+
+	session_start();
+	$_SESSION['msg'] = 'Admin user saved!';
+	$_SESSION['msg-type'] = 'success';
+
+	// go admin login
+	header('Location: /admin/');
+	exit();
+}
+
+function loginAdmin($post){
+	print_r($post);
+	exit();
 }
 
 /**
