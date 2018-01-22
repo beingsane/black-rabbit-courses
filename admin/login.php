@@ -10,7 +10,7 @@ if(!isThereAnAdminUser()){
 
 // if post
 if(isset($_POST) && !empty($_POST)) {
-  // addAdminUser($_POST);
+  loginAdmin($_POST);
   exit();
 }
 

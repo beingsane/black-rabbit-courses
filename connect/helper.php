@@ -84,8 +84,8 @@ function pass_encrypt($text){
 	return password_hash($text, PASSWORD_DEFAULT, ['cost' => 12]);
 }
 
-function pass_decrypt($text){
-	return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $salt, base64_decode($text), MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)));
+function pass_decrypt($text, $hash){
+	return password_verify($text, $hash);
 }
 
 function startsession($user_info, $db){
@@ -181,7 +181,6 @@ function addAdminUser($post){
 
 	$response = $db->insert('users', $admin_record);
 
-	session_start();
 	$_SESSION['msg'] = 'Admin user saved!';
 	$_SESSION['msg-type'] = 'success';
 
@@ -191,8 +190,48 @@ function addAdminUser($post){
 }
 
 function loginAdmin($post){
-	print_r($post);
-	exit();
+	$passWrong = false;
+
+	// do we have what we need?.. if not..
+	if(!isset($post['username']) || !isset($post['password']) || empty($post['username']) || empty($post['password'])) {
+		$passWrong = true;
+	}
+
+	// continue down the rabbit hole
+	if($passWrong === false) {
+		// check admin username
+		$response = checkAdminUsername($post['username']);
+
+		// username exists?
+		if(!empty($response)){
+			$pass = pass_decrypt($post['password'], $response->password);
+			// if we pass.. log the user in
+			if($pass) {
+				var_dump($pass);
+				print_r('log the user in now... TODO');
+				// startsession();
+				// header('location: index.php');
+				// $_SESSION['msg'] = 'You are now logged in!';
+				// $_SESSION['msg-type'] = 'success';
+				exit();
+			} else {
+				$passWrong = true;
+			}
+		} else {
+			$_SESSION['msg'] = 'Sorry, that username does not exist, or does not have administrator privileges...';
+			$_SESSION['msg-type'] = 'warning';
+			header('Location: /admin/login.php');
+			exit();
+		}
+	}
+
+	// if we got here.. they did something wrong
+	if($passWrong) {
+		$_SESSION['msg'] = 'Please remember to type your username and password correctly.';
+		$_SESSION['msg-type'] = 'warning';
+		header('Location: /admin/login.php');
+		exit();
+	}
 }
 
 /**
@@ -212,16 +251,16 @@ function setKeyDBData($data, $field){
 }
 
 /**
- *	Profile Helpers
+ *	Users helpers
  */
-function checkUsername($username) {
+function checkAdminUsername($username) {
 	// connect to datbase
 	$db = new Database(brc::DBHOST, brc::DBTABLE, brc::DBUSER, brc::DBPASS);
 
 	$username = $db->sanitize($username);
-	$response = $db->custom_query('SELECT id FROM users WHERE username ="' . $username . '" LIMIT 1', true);
+	$response = $db->custom_query('SELECT * FROM users WHERE username ="' . $username . '" && is_admin = 1 LIMIT 1', true);
 
-	return !empty($response) ? 1 : 0;
+	return $response;
 }
 
 ?>
