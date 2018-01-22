@@ -3,6 +3,8 @@ include_once('brc.php');
 include_once('database.php');
 include_once('config.php');
 
+session_start();
+
 /**
  *	Helpers
  */

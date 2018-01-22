@@ -1,6 +1,13 @@
 <?php
 include_once('../connect/helper.php');
 
+// first is there
+if(!isThereAnAdminUser()){
+  // go to add new admin
+	header('Location: /admin/new-admin-user.php');
+  exit();
+}
+
 // if post
 if(isset($_POST) && !empty($_POST)) {
   // addAdminUser($_POST);

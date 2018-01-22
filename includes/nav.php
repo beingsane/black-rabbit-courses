@@ -42,3 +42,13 @@
     ?>
   </div>
 </nav>
+<div id="message-area">
+  <?php
+  // do we have messages to show?
+  if(!empty($_SESSION['msg'])) {
+    include('alert.php');
+    // unset($_SESSION['msg']);
+    // unset($_SESSION['msg-type']);
+  }
+  ?>
+</div><!-- /#message-area -->
