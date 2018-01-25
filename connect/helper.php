@@ -88,23 +88,27 @@ function pass_decrypt($text, $hash){
 	return password_verify($text, $hash);
 }
 
-function startsession($user_info, $db){
+function startsession($user){
+	// connect to datbase
+	$db = new Database(brc::DBHOST, brc::DBTABLE, brc::DBUSER, brc::DBPASS);
+
 	session_start();
 
 	$_SESSION['loggedin']		= 1;
-	$_SESSION['is_admin']		= $user_info[0]['is_admin'];
-	$_SESSION['uid']				= $user_info[0]['id'];
-	$_SESSION['name']				= $user_info[0]['name'];
-	$_SESSION['username']		= $user_info[0]['username'];
-	$_SESSION['email']			= $user_info[0]['email'];
-	$_SESSION['last_login']	= $user_info[0]['last_login'] == '0000-00-00 00:00:00' ? date('Y-m-d H:i:s') : $user_info[0]['last_login']; // first time then just say last login was 2 seconds ago and so on..
+	$_SESSION['is_admin']		= $user->is_admin;
+	$_SESSION['uid']				= $user->id;
+	$_SESSION['name']				= $user->name;
+	$_SESSION['username']		= $user->username;
+	$_SESSION['email']			= $user->email;
+	// first time then just say last login was 2 seconds ago and so on..
+	$_SESSION['last_login']	= $user->last_login == '0000-00-00 00:00:00' ? date('Y-m-d H:i:s') : $user->last_login;
 	$_SESSION['timeout']		= time();
 
 	// update user table
-	$user = array(
+	$user_update = array(
 		'last_login' => date('Y-m-d H:i:s'),
 	);
-	$db->update('users', $user, 'id='.$user_info[0]['id']);
+	$db->update('users', $user_update, 'id=' . $user->id);
 
 	timeoutsession();
 }
@@ -118,14 +122,13 @@ function checksession(){
 
 function timeoutsession(){
 	session_start();
-	echo 'hello';
-	exit();
-	if($_SESSION['timeout'] + $default_user_idle < time()){
+
+	if($_SESSION['timeout'] + $GLOBALS['default_user_idle'] < time()){
 		session_destroy();
 		session_start();
 		$_SESSION['msg'] = 'You have been logged out due to inactivity.';
 		$_SESSION['msg-type'] = 'info';
-		header('Location: index.php');
+		header('Location: /index.php');
 		exit();
 	} else {
 		$_SESSION['timeout']	= time();
@@ -138,7 +141,7 @@ function endsession(){
 	session_start();
 	$_SESSION['msg'] = 'You are now logged out!';
 	$_SESSION['msg-type'] = 'info';
-	header('Location: index.php');
+	header('Location: /index.php');
 	exit();
 }
 
@@ -162,6 +165,17 @@ function isThereAnAdminUser(){
 }
 
 function addAdminUser($post){
+	// simple validation for now
+	if(empty($post['name']) || empty($post['username']) || empty($post['email']) || empty($post['password'])) {
+		// check post data
+		$_SESSION['msg'] = 'Please fill in all form fields.';
+		$_SESSION['msg-type'] = 'warning';
+
+		// go admin login
+		header('Location: /admin/new-admin-user.php');
+		exit();
+	}
+
 	// connect to datbase
 	$db = new Database(brc::DBHOST, brc::DBTABLE, brc::DBUSER, brc::DBPASS);
 
@@ -205,14 +219,15 @@ function loginAdmin($post){
 		// username exists?
 		if(!empty($response)){
 			$pass = pass_decrypt($post['password'], $response->password);
+
 			// if we pass.. log the user in
 			if($pass) {
-				var_dump($pass);
-				print_r('log the user in now... TODO');
-				// startsession();
-				// header('location: index.php');
-				// $_SESSION['msg'] = 'You are now logged in!';
-				// $_SESSION['msg-type'] = 'success';
+				// log in user session start
+				startsession($response);
+				$_SESSION['msg'] = 'You are now logged in!';
+				$_SESSION['msg-type'] = 'success';
+
+				header('Location: /admin/');
 				exit();
 			} else {
 				$passWrong = true;

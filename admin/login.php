@@ -19,7 +19,6 @@ $title = 'Admin Login';
 include_once('../includes/head.php');
 
 $isAdmin = true;
-$noAdmin = true;
 include_once('../includes/nav.php');
 ?>
 

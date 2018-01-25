@@ -1,10 +1,8 @@
 <?php
+  include_once('../connect/helper.php');
+
   if(!$isAdmin) {
     $isAdmin = false;
-  }
-
-  if(!$noAdmin) {
-    $noAdmin = false;
   }
 ?>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -17,31 +15,40 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/access">Access</a>
+      </li>
+    </ul>
+
     <?php
-    if(!$isAdmin) {
+    if($_SESSION['loggedin'] == 1){
+      // are they an admin?
+      if($_SESSION['is_admin'] === '1') {
+        ?>
+        <a class="btn btn-outline-primary mr-10" href="/admin">Admin Dashboard</a>
+        <?php
+      }
       ?>
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/access">Access</a>
-        </li>
-      </ul>
-      <a class="btn btn-outline-secondary" href="/admin">
-        Admin Access
+      <a class="btn btn-outline-dark" href="/logout">
+        Logout
       </a>
       <?php
-    } elseif(!$noAdmin) {
+    } else {
       ?>
-      <a class="btn btn-outline-secondary" href="/logout">
-        Logout
+      <a class="btn btn-outline-secondary" href="/admin">
+        Admin Access
       </a>
       <?php
     }
     ?>
   </div>
 </nav>
+
 <div id="message-area">
   <?php
   // do we have messages to show?
