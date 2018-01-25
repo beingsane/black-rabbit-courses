@@ -95,7 +95,7 @@ function startsession($user){
 	session_start();
 
 	$_SESSION['loggedin']		= 1;
-	$_SESSION['is_admin']		= $user->is_admin;
+	$_SESSION['is_admin']		= (int) $user->is_admin;
 	$_SESSION['uid']				= $user->id;
 	$_SESSION['name']				= $user->name;
 	$_SESSION['username']		= $user->username;
@@ -147,7 +147,7 @@ function endsession(){
 
 function isAdmin(){
 	checksession();
-	if($_SESSION['is_admin'] == 0){
+	if($_SESSION['is_admin'] === 0){
 		$_SESSION['msg'] = 'You do not have access to this page.';
 		$_SESSION['msg-type'] = 'danger';
 		header('Location: index.php');

@@ -26,9 +26,10 @@
     </ul>
 
     <?php
-    if($_SESSION['loggedin'] == 1){
+    // are they logged in?
+    if($_SESSION['loggedin'] === 1){
       // are they an admin?
-      if($_SESSION['is_admin'] === '1') {
+      if($_SESSION['is_admin'] === 1) {
         ?>
         <a class="btn btn-outline-primary mr-10" href="/admin">Admin Dashboard</a>
         <?php
